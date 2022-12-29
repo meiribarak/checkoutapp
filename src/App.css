@@ -1,6 +1,19 @@
 .App {
   text-align: center;
+  background-color: white;
 }
+
+.top-bar {
+  width: 100%;
+  height: 50px;
+  background-color: blue;
+}
+
+.logo {
+  height: 50px;
+  vertical-align: middle;
+}
+
 
 .App-logo {
   height: 40vmin;
