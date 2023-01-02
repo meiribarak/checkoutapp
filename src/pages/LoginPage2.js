@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const juxtalogo = 'https://www.juxta.ai/build/img/logo.svg'
 
-function LoginPage() {
+function LoginPage2() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -53,6 +53,6 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default LoginPage2;
 
 

@@ -20,11 +20,11 @@ function PhoneNumberPage() {
   console.log(basketCtx);
 
   function actionHandler(navigateTo) {
-    basketCtx.addConsumerStateToContext({
+    basketCtx.logConsumerHistory({
       key: "PhoneNumberPage",
       value: phoneNumber,
     });
-    basketCtx.addConsumerStateToContext({
+    basketCtx.logConsumerHistory({
       key: "PhoneNumberPage",
       value: navigateTo.response,
     });

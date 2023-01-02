@@ -26,7 +26,7 @@ function FeedbackPage() {
         })
         .then((data) => {
           console.log("navigate to home");
-          navigate("/home");
+          navigate("/");
         });
     };
     feedbackValue && submitFeedback();
@@ -37,7 +37,7 @@ function FeedbackPage() {
     const val = event.target.getAttribute("val");
     console.log("consumer selected feedback: " + val);
 
-    basketCtx.addConsumerStateToContext({ key: "FeedbackPage", value: val });
+    basketCtx.logConsumerHistory({ key: "FeedbackPage", value: val });
     console.log(basketCtx);
 
     setFeedbackValue(val);

@@ -32,7 +32,7 @@ const BasketContext = createContext({
   getBasketItems: () => {},
   getTotalItems: () => {},
   getPeopleInGroup: () => {},
-  addConsumerStateToContext: (cState) => {},
+  logConsumerHistory: (cState) => {},
   updateDummyBasket: () => {},
 });
 
@@ -83,7 +83,7 @@ export function BasketContextProvider(props) {
     getBasketItems: getBasketItemsHandler,
     getTotalItems: getTotalItemsHandler,
     getPeopleInGroup: getPeopleInGroupHandler,
-    addConsumerStateToContext: updateConsumerStateHandler,
+    logConsumerHistory: updateConsumerStateHandler,
     updateDummyBasket: () => {
       updateConsumerBasketHandler(DUMMY_BASKET);
     },

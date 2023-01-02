@@ -18,7 +18,7 @@ function BasketPage() {
   
   function actionHandler(navigateTo)
   {
-    basketCtx.addConsumerStateToContext({ key: "BasketPage", value: navigateTo.response });    
+    basketCtx.logConsumerHistory({ key: "BasketPage", value: navigateTo.response });    
     console.log("navigate to " + navigateTo.page);
     navigate(navigateTo.page);
   }  
