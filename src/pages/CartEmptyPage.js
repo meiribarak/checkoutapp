@@ -3,7 +3,7 @@ import "./../components/ui/css/styles.css";
 import CustomerHeader from "../components/ui/CustomerHeader";
 import BasketContext from "../components/store/basket-context";
 import { useNavigate } from "react-router-dom";
-import cryCartIcon from "../components/ui/images/cart.png";
+import BuddyLogo from "../components/ui/BuddyLogo";
 
 const CartEmptyPage = () => {
   const basketCtx = useContext(BasketContext);
@@ -40,9 +40,7 @@ const CartEmptyPage = () => {
     <div>
       <CustomerHeader />
       <main className="cntBody">
-        <div className="cartIco">
-          <img src={cryCartIcon} alt="empty cart" />
-        </div>
+        <BuddyLogo icon="cart" alt="buddy empty cart logo"/>
         <p className="txt40x50">
           It looks like your basket is empty <br />
           If there is a problem, please let us know

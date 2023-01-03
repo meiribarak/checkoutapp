@@ -260,6 +260,15 @@ ol {
   background: transparent;
 }
 
+.button.button--tran.button--blue {
+  border-color: #001f6d;
+  color: #001f6d;
+}
+
+.button.button--sizeThird {
+  width: 40.33% !important;
+}
+
 .buttonFil {
   font-size: 48px;
   line-height: 1em;
@@ -286,6 +295,10 @@ ol {
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+.mb4vh {
+  margin-bottom: 4vh;
 }
 
 .txt48x50 {
@@ -336,10 +349,10 @@ ol {
   font-family: "Century Gothic";
   color: #001f6d;
   font-size: 25px;
-  line-height: 1em;
+  line-height: 1.12em;
   font-weight: 400;
   font-size: 2.4414vw;
-  line-height: 1em;
+  line-height: 1.1228803146em;
   font-weight: 400;
 }
 
@@ -751,6 +764,7 @@ ol {
   align-items: center;
   text-align: center;
   padding-top: 8vh;
+  padding-bottom: 8vh;
 }
 
 .cntBody .cartIco {
@@ -765,6 +779,15 @@ ol {
 
 .cntBody .naviger {
   margin-top: 10vh;
+}
+
+.cntBody--str .naviger {
+  width: 100%;
+  padding: 0 4.3945vw;
+}
+
+.cntBody--str .button.button--big.button--fixHeight {
+  height: 17.0898vw;
 }
 
 .cartIco {
@@ -919,7 +942,7 @@ ol {
 
   .txt25x25 {
     font-size: 18px;
-    line-height: 1.1111111111em;
+    line-height: 1.1666666667em;
     font-weight: 400;
   }
 

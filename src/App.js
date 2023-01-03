@@ -1,9 +1,6 @@
-import logo from "./logo.svg";
 import React, { useContext } from 'react';
 import { Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
-import Layout from "./components/layout/Layout";
-import LoginPage from "./pages/LoginPage2";
 import BasketPage from "./pages/BasketPage";
 import HomePage from "./pages/HomePage";
 import FeedbackPage from "./pages/FeedbackPage";
@@ -13,6 +10,8 @@ import PhoneNumberPage from "./pages/PhoneNumberPage";
 import AuthPage from "./pages/AuthPage";
 import CartEmptyPage from "./pages/CartEmptyPage";
 import AuthContext from "./components/store/auth-context";
+import NoBasketIdentifiedPage from "./pages/NoBasketIdentifiedPage";
+import FeedbackReasonPage from './pages/FeedbackReasonPage';
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -29,6 +28,8 @@ function App() {
         <Route path="/restassure" element={<RestAssurePage />}></Route>
         <Route path="/phonenumber" element={<PhoneNumberPage />}></Route>
         <Route path="/cartempty" element={<CartEmptyPage />}></Route>
+        <Route path="/nobasket" element={<NoBasketIdentifiedPage />}></Route>
+        <Route path="/feedbackreason" element={<FeedbackReasonPage />}></Route>
         <Route path="*" element={<Navigate replace to="/"/>}></Route>
       </Routes>
     </div>
