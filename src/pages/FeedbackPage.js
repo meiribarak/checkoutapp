@@ -9,31 +9,43 @@ import feedbackIcon4 from "./../components/ui/images/2_Risorsa 2.svg"; // sad or
 import feedbackIcon5 from "./../components/ui/images/1_Risorsa 1.svg"; // Cry red face
 import CustomerLogo from "../components/ui/CustomerLogo";
 import BasketContext from "../components/store/basket-context";
+import JRSaveConsumerData from "../components/fetch/FetchData";
 
+// ================
+// Feedback Mapping
+// ================
+const feedbackMapping = {
+  VeryHappy: { Icon: feedbackIcon1, Value: 1 },
+  Happy: { Icon: feedbackIcon2, Value: 2 },
+  Ok: { Icon: feedbackIcon3, Value: 3 },
+  Sad: { Icon: feedbackIcon4, Value: 4 },
+  Cry: { Icon: feedbackIcon5, Value: 5 },
+}
+const navigationSubmitted = { navigateTo: "/" };
+
+// ====
+// Page
+// ====
 function FeedbackPage() {
   const navigate = useNavigate();
   const [feedbackValue, setFeedbackValue] = useState(null);
   const basketCtx = useContext(BasketContext);
 
+  console.log("FeedbackPage");
+
   useEffect(() => {
     const submitFeedback = () => {
-      fetch(
-        "https://react-meetups-a43aa-default-rtdb.europe-west1.firebasedatabase.app/meetups.json"
-      )
-        .then((response) => {
-          console.log("submitted feedback");
-          return response.json();
-        })
-        .then((data) => {
-          console.log("navigate to home");
-          navigate("/");
-        });
+      basketCtx.updateFeedback(feedbackValue);
+      JRSaveConsumerData.saveFeedback(feedbackValue).then((res) => {
+        console.log("submitted feedback");
+        navigate(navigationSubmitted.navigateTo);
+      });
     };
     feedbackValue && submitFeedback();
 
   }, [feedbackValue]);
 
-  function feedbackHandler(event) {    
+  function feedbackHandler(event) {
     const val = event.target.getAttribute("val");
     console.log("consumer selected feedback: " + val);
 
@@ -51,11 +63,21 @@ function FeedbackPage() {
         creating delight with every visit
       </p>
       <div className="grades">
-        <button className="gradesBtn" onClick={feedbackHandler} ><img src={feedbackIcon1} alt="Love green face" val="1"/></button>
-        <button className="gradesBtn" onClick={feedbackHandler} ><img src={feedbackIcon2} alt="Smile green face" val="2"/></button>
-        <button className="gradesBtn" onClick={feedbackHandler} ><img src={feedbackIcon3} alt="ok yellow face" val="3"/></button>
-        <button className="gradesBtn" onClick={feedbackHandler} ><img src={feedbackIcon4} alt="sad orange face" val="4"/></button>
-        <button className="gradesBtn" onClick={feedbackHandler} ><img src={feedbackIcon5} alt="cry red face" val="5"/></button>
+        <button className="gradesBtn" onClick={feedbackHandler}>
+          <img src={feedbackMapping.VeryHappy.Icon} alt="Love green face" val={feedbackMapping.VeryHappy.Value} />
+        </button>
+        <button className="gradesBtn" onClick={feedbackHandler}>
+          <img src={feedbackMapping.Happy.Icon} alt="Smile green face" val={feedbackMapping.Happy.Value} />
+        </button>
+        <button className="gradesBtn" onClick={feedbackHandler}>
+          <img src={feedbackMapping.Ok.Icon} alt="ok yellow face" val={feedbackMapping.Ok.Value} />
+        </button>
+        <button className="gradesBtn" onClick={feedbackHandler}>
+          <img src={feedbackMapping.Sad.Icon} alt="sad orange face" val={feedbackMapping.Sad.Value} />
+        </button>
+        <button className="gradesBtn" onClick={feedbackHandler}>
+          <img src={feedbackMapping.Cry.Icon} alt="cry red face" val={feedbackMapping.Cry.Value} />
+        </button>
       </div>
       <p className="txt35x43">
         Deliver the ultimate guest experience <br />

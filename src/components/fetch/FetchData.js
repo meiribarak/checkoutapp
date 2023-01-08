@@ -1,76 +1,95 @@
-import React from "react";
+import React, { useContext } from "react";
+import AuthContext from "../store/auth-context";
+import BasketContext from "../store/basket-context";
 
-const environmentUrl = 'https://api.sandbox.juxtaretail.com/';
-const apiKey = 'UycIBPWoRq8DkLx2euxgv4LmsueVpkSB88K9zu2W';
+const environmentUrl = "https://api.sandbox.juxtaretail.com/";
+const apiKey = "UycIBPWoRq8DkLx2euxgv4LmsueVpkSB88K9zu2W";
 
-const jrSaveConsumerData = {
-    saveFeedback: jrSaveFeedbackHandler,
-    saveReasonNotPurchasing: jrSaveReasonNotPurchasingHandler,
-    saveDispute: jrSaveDisputeHandler,
-    saveReceiptRequest: jrSaveReceiptRequestHandler
-}
-
-const jrFetchDataUrl = {
-    saveFeedback: "/j7/checkout/v1/feedback",
-    saveReasonNotPurchasing: "/j7/checkout/v1/no-purchase",
-    saveDispute: "/j7/checkout/v1/dispute",
-    saveReceiptRequest: "/j7/checkout/v1/receipt",
-    getSignalRToken: "/j7/checkout/v1/token"    // what is this???
+const JRSaveConsumerData = {
+  saveFeedback: jrSaveFeedbackHandler,
+  saveReasonNotPurchasing: jrSaveReasonNotPurchasingHandler,
+  saveDispute: jrSaveDisputeHandler,
+  saveReceiptRequest: jrSaveReceiptRequestHandler,
 };
 
-const jrSaveFeedbackHandler = (reqBody) => {
-    return jrFetchData(jrFetchDataUrl.saveFeedback,reqBody);
-}
+const jrFetchDataUrl = {
+  saveFeedback: "/j7/checkout/v1/feedback",
+  saveReasonNotPurchasing: "/j7/checkout/v1/no-purchase",
+  saveDispute: "/j7/checkout/v1/dispute",
+  saveReceiptRequest: "/j7/checkout/v1/receipt",
+  getSignalRToken: "/j7/checkout/v1/token", // what is this???
+};
 
-const jrSaveReasonNotPurchasingHandler = (reqBody) => {
-    return jrFetchData(jrFetchDataUrl.saveReasonNotPurchasing,reqBody);
-}
+const jrSaveDataBodyTemplate = {
+  storeId: "",
+  sessionId: "",
+  code: "",
+};
 
-const jrSaveDisputeHandler = (reqBody) => {
-    return jrFetchData(jrFetchDataUrl.saveDispute,reqBody);
-}
+const jrSaveFeedbackHandler = (feedbackCode) => {
+  jrSaveDataBodyTemplate.code = feedbackCode;
+  return JRFetchData(jrFetchDataUrl.saveFeedback, jrSaveDataBodyTemplate);
+};
 
-const jrSaveReceiptRequestHandler = (reqBody) => {
-    return jrFetchData(jrFetchDataUrl.saveReceiptRequest,reqBody);
-}
+const jrSaveReasonNotPurchasingHandler = (noPurchaseCode) => {
+  jrSaveDataBodyTemplate.code = noPurchaseCode;
+  return JRFetchData(
+    jrFetchDataUrl.saveReasonNotPurchasing,
+    jrSaveDataBodyTemplate
+  );
+};
 
-const jrFetchData = (reqUrl, reqBody) => {
+const jrSaveDisputeHandler = (issueCode) => {
+  jrSaveDataBodyTemplate.code = issueCode;
+  return JRFetchData(jrFetchDataUrl.saveDispute, jrSaveDataBodyTemplate);
+};
 
-    let response = null;
+const jrSaveReceiptRequestHandler = (phoneNumber) => {
+  return JRFetchData(jrFetchDataUrl.saveReceiptRequest, {
+    storeId: "",
+    sessionId: "",
+    phone: phoneNumber,
+  });
+};
 
-    const url = environmentUrl.concat(reqUrl);
+const JRFetchData = (reqUrl, reqBody) => {
+  const authCtx = useContext(AuthContext);
+  const basketCtx = useContext(BasketContext);
+  const url = environmentUrl.concat(reqUrl);
 
-    fetch(url,
-        {
-          method: 'POST',
-          body: JSON.stringify(reqBody),
-          headers: {
-            'x-api-key': apiKey,
-            'Content-Type': 'application/json'
+  reqBody.storeId = basketCtx.storeid;
+  reqBody.sessionId = basketCtx.sid;
+
+  let res = null;
+  fetch(url, {
+    method: "POST",
+    body: JSON.stringify(reqBody),
+    headers: {
+      "x-api-key": apiKey,
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => {
+      console.log("Fetch data from: " + reqUrl);
+      console.log(res);
+      console.log(res.ok);
+
+      if (res.ok) {
+        return res.json();
+      } else {
+        return res.json().then((data) => {
+          let errorMessage = "Authentication Failed";
+          if (data && data.error && data.error.message) {
+            errorMessage = data.error.message;
           }
-        }).then(res => {          
-          console.log("Fetch data from: " + reqUrl);
-          console.log(res);
-          console.log(res.ok);
-  
-          if (res.ok) {
-            response = res.json();
-          } else {
-            response = res.json().then(data => {              
-              let errorMessage = 'Authentication Failed';
-              if (data && data.error && data.error.message) {
-                errorMessage = data.error.message;
-              }            
-              throw new Error(errorMessage);
-            });
-          }
-        })
-        .catch((err)=>{          
-          alert(err.message);
-        })
+          throw new Error(errorMessage);
+        });
+      }
+    })
+    .catch((err) => {
+      alert(err.message);
+      return res.json();
+    });
+};
 
-        return response;
-    };
-
-    export default jrSaveConsumerData;
-
+export default JRSaveConsumerData;

@@ -1,41 +1,32 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import "./../components/ui/css/styles.css";
 import CustomerHeader from "../components/ui/CustomerHeader";
 import BasketContext from "../components/store/basket-context";
 import { useNavigate } from "react-router-dom";
 import BuddyLogo from "../components/ui/BuddyLogo";
 
+
+// ==================
+// Navigation Mapping
+// ==================
+const actionCorrect = { response: "Correct", navigateTo: "/feedback" };
+const actionNotRight = { response: "NotRight", navigateTo: "/phonenumber" };
+
+// ====
+// Page
+// ====
 const CartEmptyPage = () => {
   const basketCtx = useContext(BasketContext);
   const navigate = useNavigate();
-
-  const navigateToFeedback = { response: "AllRight", page: "/feedback" };
-  const navigateToPhoneNumber = {
-    response: "GetReceipt",
-    page: "/phonenumber",
-  };
-  const navigateToRestAssure = {
-    response: "SomethingIsWrong",
-    page: "/restassure",
-  };
-
+  
   console.log("CartEmptyPage");
-  console.log(basketCtx);
 
-  function actionHandler(navigateTo) {
-    basketCtx.updateJourney({
-      key: "CartEmptyPage",
-      value: navigateTo.response,
-    });
-    console.log("navigate to " + navigateTo.page);
-    //navigate(navigateTo.page);
+  function actionHandler(action) {
+    basketCtx.updateJourney({ key: "CartEmptyPage", value: action.response });
+    console.log("navigate to " + action.navigateTo);
+    navigate(action.navigateTo, { ShowTrustYou: true });
   }
-
-  // useEffect(() => {
-  //   basketCtx.updateDummyBasket();
-  //   console.log(basketCtx);
-  // }, [basketCtx]);
-
+  
   return (
     <div>
       <CustomerHeader />
@@ -50,18 +41,14 @@ const CartEmptyPage = () => {
           <div className="navigerButtoms">
             <button
               className="button button--big button--fixHeight"
-              onClick={() => {
-                actionHandler(navigateToRestAssure);
-              }}
+              onClick={() => { actionHandler(actionCorrect) }}
             >
               That's correct <br />I do not have anything
             </button>
 
             <button
               className="button button--yellow button--big button--fixHeight"
-              onClick={() => {
-                actionHandler(navigateToRestAssure);
-              }}
+              onClick={() => { actionHandler(actionNotRight) }}
             >
               That's not right. <br />
               I am trying to buy <br />

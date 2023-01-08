@@ -1,36 +1,48 @@
 import React, { useContext, useState } from "react";
 import "./../components/ui/css/styles.css";
 import CustomerHeader from "../components/ui/CustomerHeader";
-import BasketItemsList from "../components/checkout/BasketItemsList";
 import BasketContext from "../components/store/basket-context";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import clearIcon from "../components/ui/images/clear.png";
 import telIcon from "../components/ui/images/tel.png";
+import JRSaveConsumerData from "../components/fetch/FetchData";
 
+// ==================
+// Navigation Mapping
+// ==================
+const actionConfirm = { response: "Confirm", navigateTo: "/feedback" };
+const actionBack = { response: "Back", navigateTo: "/basket" };
+const actionTrustYou = { response: "TrustYou", navigateTo: "/thankyou" };
+
+// ====
+// Page
+// ====
 function PhoneNumberPage() {
   const basketCtx = useContext(BasketContext);
   const navigate = useNavigate();
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const isShowTrustMeButton = false;
-
-  const navigateToFeedback = { response: "TrustYou", page: "/feedback" };
-  const navigateToBasket = { response: "Back", page: "/basket" };
-  const navigateToRestAssure = { response: "Confirm", page: "/feedback" };
+  const {ShowTrustYou} = useLocation();
+  const [phoneNumber, setPhoneNumber] = useState(null);
+  const isShowTrustMeButton = ShowTrustYou;
 
   console.log("PhoneNumberPage");
-  console.log(basketCtx);
 
-  function actionHandler(navigateTo) {
-    basketCtx.updateJourney({
-      key: "PhoneNumberPage",
-      value: phoneNumber,
-    });
-    basketCtx.updateJourney({
-      key: "PhoneNumberPage",
-      value: navigateTo.response,
-    });
-    console.log("navigate to " + navigateTo.page);
-    navigate(navigateTo.page);
+  function actionHandler(action) {
+    // useEffect(() => {
+    //   const submitPhoneNumber = () => {
+    //     basketCtx.updateContactDetails(phoneNumber);
+    //     JRSaveConsumerData.saveReceiptRequest(phoneNumber);
+    //   };
+    //   phoneNumber && submitPhoneNumber();
+    // }, [phoneNumber, res.response === uiResponses.Confirm]);
+
+    if (action.response === actionConfirm.response) {
+      basketCtx.updateContactDetails(phoneNumber);
+      JRSaveConsumerData.saveReceiptRequest(phoneNumber);
+    }
+
+    basketCtx.updateJourney({ key: "PhoneNumberPage", value: action.response });
+    console.log("navigate to " + action.navigateTo);
+    navigate(action.navigateTo);
   }
 
   function addDigitToPhoneNumber(event) {
@@ -167,7 +179,7 @@ function PhoneNumberPage() {
             <button
               className="button button--min button--red button--fixHeight"
               onClick={() => {
-                actionHandler(navigateToBasket);
+                actionHandler(actionBack);
               }}
             >
               Back
@@ -175,7 +187,7 @@ function PhoneNumberPage() {
             <button
               className="button button--min button--fixHeight"
               onClick={() => {
-                actionHandler(navigateToRestAssure);
+                actionHandler(actionConfirm);
               }}
             >
               Confirm
@@ -185,7 +197,7 @@ function PhoneNumberPage() {
               <button
                 className="button button--min button--tran button--fixHeight"
                 onClick={() => {
-                  actionHandler(navigateToFeedback);
+                  actionHandler(actionTrustYou);
                 }}
               >
                 I trust you <br />

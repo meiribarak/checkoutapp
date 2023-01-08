@@ -11,7 +11,8 @@ import AuthPage from "./pages/AuthPage";
 import CartEmptyPage from "./pages/CartEmptyPage";
 import AuthContext from "./components/store/auth-context";
 import NoBasketIdentifiedPage from "./pages/NoBasketIdentifiedPage";
-import FeedbackReasonPage from './pages/FeedbackReasonPage';
+import FeedbackWentWrongReasonPage from './pages/FeedbackWentWrongReasonPage';
+import FeedbackCartEmptyReasonPage from './pages/FeedbackCartEmptyReasonPage';
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -29,7 +30,8 @@ function App() {
         <Route path="/phonenumber" element={<PhoneNumberPage />}></Route>
         <Route path="/cartempty" element={<CartEmptyPage />}></Route>
         <Route path="/nobasket" element={<NoBasketIdentifiedPage />}></Route>
-        <Route path="/feedbackreason" element={<FeedbackReasonPage />}></Route>
+        <Route path="/feedbackwentwrongreason" element={<FeedbackWentWrongReasonPage />}></Route>
+        <Route path="/feedbackyouropinion" element={<FeedbackCartEmptyReasonPage />}></Route>
         <Route path="*" element={<Navigate replace to="/"/>}></Route>
       </Routes>
     </div>

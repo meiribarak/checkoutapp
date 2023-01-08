@@ -5,22 +5,28 @@ import BasketItemsList from "../components/checkout/BasketItemsList";
 import BasketContext from "../components/store/basket-context";
 import { useNavigate } from "react-router-dom";
 
+// ==================
+// Navigation Mapping
+// ==================
+const actionAllRight = { response: "AllRight", navigateTo: "/feedback" };
+const actionGetReceipt = { response: "GetReceipt", navigateTo: "/phonenumber" };
+const actionSomethingWentWrong = { response: "SomethingIsWrong", navigateTo: "/feedbackwentwrongreason" };
+
+// ====
+// Page
+// ====
 function BasketPage() {
   const basketCtx = useContext(BasketContext);
   const navigate = useNavigate();
 
-  const navigateToFeedback = { response: "AllRight", page: "/feedback" };
-  const navigateToPhoneNumber = { response: "GetReceipt", page: "/phonenumber" };
-  const navigateToFeedbackReason = { response: "SomethingIsWrong", page: "/feedbackreason" };
-
   console.log("BasketPage");
   console.log(basketCtx);
   
-  function actionHandler(navigateTo)
+  function actionHandler(action)
   {
-    basketCtx.updateJourney({ key: "BasketPage", value: navigateTo.response });    
-    console.log("navigate to " + navigateTo.page);
-    navigate(navigateTo.page);
+    basketCtx.updateJourney({ key: "BasketPage", value: action.response });    
+    console.log("navigate to " + action.navigateTo);
+    navigate(action.navigateTo);
   }  
 
   useEffect(() => {
@@ -46,18 +52,18 @@ function BasketPage() {
         <div className="navigerButtoms">
           <button
             className="button button--big button--red button--fixHeight"
-            onClick={() => { actionHandler(navigateToFeedbackReason); }}
+            onClick={() => { actionHandler(actionSomethingWentWrong); }}
           >
             Something
             <br />
             is not right
           </button>
 
-          <button className="button button--big" onClick={() => { actionHandler(navigateToFeedback); }}>
+          <button className="button button--big" onClick={() => { actionHandler(actionAllRight); }}>
             All right
           </button>
           <div className="button button--big button--empty"></div>
-          <button className="button button--big" onClick={()=>{actionHandler(navigateToPhoneNumber);}}>
+          <button className="button button--big" onClick={()=>{actionHandler(actionGetReceipt);}}>
             Get receipt
           </button>
         </div>
