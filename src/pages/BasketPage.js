@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import "./../components/ui/css/styles.css";
 import CustomerHeader from "../components/ui/CustomerHeader";
 import BasketItemsList from "../components/checkout/BasketItemsList";
@@ -12,41 +12,48 @@ const actionAllRight = { response: "AllRight", navigateTo: "/feedback" };
 const actionGetReceipt = { response: "GetReceipt", navigateTo: "/phonenumber" };
 const actionSomethingWentWrong = { response: "SomethingIsWrong", navigateTo: "/feedbackwentwrongreason" };
 
+let basketItems, totalItems, peopleInGroup;
+
 // ====
 // Page
 // ====
 function BasketPage() {
+  const [isBasketItemsLoaded, setBasketItems] = useState(false);
   const basketCtx = useContext(BasketContext);
   const navigate = useNavigate();
-
+  
   console.log("BasketPage");
   console.log(basketCtx);
+  console.log("has items: ", basketCtx.hasBasket());
+  const items = basketCtx.getBasketItems();
+  console.log(items);
+
+  useEffect(() => {
+    basketItems = basketCtx.getBasketItems();
+    totalItems = basketCtx.getTotalItems();
+    peopleInGroup = basketCtx.getPeopleInGroup();
+    setBasketItems(true);
+  }, [isBasketItemsLoaded]);
   
-  function actionHandler(action)
-  {
+  function actionHandler(action) {
     basketCtx.updateJourney({ key: "BasketPage", value: action.response });    
     console.log("navigate to " + action.navigateTo);
     navigate(action.navigateTo);
-  }  
-
-  useEffect(() => {
-    basketCtx.updateDummyBasket();
-    console.log(basketCtx);
-  }, [basketCtx]);
-
+  };
+  
   return (
     <div className="minHg">
       <CustomerHeader />
-      <BasketItemsList items={basketCtx.getBasketItems()} />
+      <BasketItemsList items={basketItems} />
       <nav className="naviger">
         <div className="navigerTop">
           <div className="navigerTop__item">
             <p className="txt35x43 w700">People in group:</p>
-            <p className="txt48x50">{basketCtx.getPeopleInGroup()}</p>
+            <p className="txt48x50">{peopleInGroup}</p>
           </div>
           <div className="navigerTop__item">
             <p className="txt35x43 w700">Subtotal</p>
-            <p className="txt48x50">{basketCtx.getTotalItems()}</p>
+            <p className="txt48x50">{totalItems}</p>
           </div>
         </div>
         <div className="navigerButtoms">

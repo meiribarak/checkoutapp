@@ -5,13 +5,6 @@ import BasketContext from "../store/basket-context";
 const environmentUrl = "https://api.sandbox.juxtaretail.com/";
 const apiKey = "UycIBPWoRq8DkLx2euxgv4LmsueVpkSB88K9zu2W";
 
-const JRSaveConsumerData = {
-  saveFeedback: jrSaveFeedbackHandler,
-  saveReasonNotPurchasing: jrSaveReasonNotPurchasingHandler,
-  saveDispute: jrSaveDisputeHandler,
-  saveReceiptRequest: jrSaveReceiptRequestHandler,
-};
-
 const jrFetchDataUrl = {
   saveFeedback: "/j7/checkout/v1/feedback",
   saveReasonNotPurchasing: "/j7/checkout/v1/no-purchase",
@@ -51,6 +44,14 @@ const jrSaveReceiptRequestHandler = (phoneNumber) => {
     phone: phoneNumber,
   });
 };
+
+const JRSaveConsumerData = {
+  saveFeedback: jrSaveFeedbackHandler,
+  saveReasonNotPurchasing: jrSaveReasonNotPurchasingHandler,
+  saveDispute: jrSaveDisputeHandler,
+  saveReceiptRequest: jrSaveReceiptRequestHandler,
+};
+
 
 const JRFetchData = (reqUrl, reqBody) => {
   const authCtx = useContext(AuthContext);

@@ -14,10 +14,11 @@ import NoBasketIdentifiedPage from "./pages/NoBasketIdentifiedPage";
 import FeedbackWentWrongReasonPage from './pages/FeedbackWentWrongReasonPage';
 import FeedbackCartEmptyReasonPage from './pages/FeedbackCartEmptyReasonPage';
 
+import TestPage from './pages/TestPage';  // remove before production!
+
 function App() {
   const authCtx = useContext(AuthContext);
-  
-  
+    
   return (
     <div>
       <Routes>
@@ -32,11 +33,12 @@ function App() {
         <Route path="/nobasket" element={<NoBasketIdentifiedPage />}></Route>
         <Route path="/feedbackwentwrongreason" element={<FeedbackWentWrongReasonPage />}></Route>
         <Route path="/feedbackyouropinion" element={<FeedbackCartEmptyReasonPage />}></Route>
+        <Route path="/test" element={<TestPage />}></Route>
         <Route path="*" element={<Navigate replace to="/"/>}></Route>
       </Routes>
     </div>
   );
-}
+};
 
 export default App;
 
