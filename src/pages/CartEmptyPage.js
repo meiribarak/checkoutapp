@@ -23,7 +23,7 @@ const CartEmptyPage = () => {
   console.log(basketCtx);
 
   function actionHandler(navigateTo) {
-    basketCtx.logConsumerHistory({
+    basketCtx.updateJourney({
       key: "CartEmptyPage",
       value: navigateTo.response,
     });

@@ -11,14 +11,14 @@ function BasketPage() {
 
   const navigateToFeedback = { response: "AllRight", page: "/feedback" };
   const navigateToPhoneNumber = { response: "GetReceipt", page: "/phonenumber" };
-  const navigateToRestAssure = { response: "SomethingIsWrong", page: "/restassure" };
+  const navigateToFeedbackReason = { response: "SomethingIsWrong", page: "/feedbackreason" };
 
   console.log("BasketPage");
   console.log(basketCtx);
   
   function actionHandler(navigateTo)
   {
-    basketCtx.logConsumerHistory({ key: "BasketPage", value: navigateTo.response });    
+    basketCtx.updateJourney({ key: "BasketPage", value: navigateTo.response });    
     console.log("navigate to " + navigateTo.page);
     navigate(navigateTo.page);
   }  
@@ -46,7 +46,7 @@ function BasketPage() {
         <div className="navigerButtoms">
           <button
             className="button button--big button--red button--fixHeight"
-            onClick={() => { actionHandler(navigateToRestAssure); }}
+            onClick={() => { actionHandler(navigateToFeedbackReason); }}
           >
             Something
             <br />

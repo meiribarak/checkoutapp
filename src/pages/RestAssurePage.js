@@ -12,7 +12,7 @@ function RestAssurePage() {
   
   function actionHandler(navigateTo)
   {
-    basketCtx.logConsumerHistory({ key: "RestAssurePage", value: navigateTo.response });    
+    basketCtx.updateJourney({ key: "RestAssurePage", value: navigateTo.response });    
     console.log("navigate to " + navigateTo.page);
     navigate(navigateTo.page);
   } 

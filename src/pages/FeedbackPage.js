@@ -37,7 +37,7 @@ function FeedbackPage() {
     const val = event.target.getAttribute("val");
     console.log("consumer selected feedback: " + val);
 
-    basketCtx.logConsumerHistory({ key: "FeedbackPage", value: val });
+    basketCtx.updateJourney({ key: "FeedbackPage", value: val });
     console.log(basketCtx);
 
     setFeedbackValue(val);

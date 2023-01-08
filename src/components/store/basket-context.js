@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import React, { useState } from "react";
 
 const DUMMY_BASKET = {
   items: [
@@ -22,25 +22,54 @@ const DUMMY_BASKET = {
 const defaultTotalItems = 1;
 const defaultPeopleInGroup = 1;
 
-const BasketContext = createContext({
-  items: [],
-  totalItems: defaultTotalItems,
-  peopleInGroup: defaultPeopleInGroup,
-  consumerState: [], // key value of page/button and what user selected, for tracking capabilities
+const BasketContext = React.createContext({
+  storeid: null,
+  sid: null,
+  basket: {
+    items: [],
+    totalItems: defaultTotalItems,
+    peopleInGroup: defaultPeopleInGroup,
+  },
+  dispute: {
+    raised: false,
+    reason: "",
+  },
+  ContactDetails: {
+    email: "",
+    phonenumber: "",
+  },
+  feedback: "",
+  journeyHistory: [], // key value of page/button and what user selected, for tracking capabilities
   updateBasket: (basket) => {},
+  setSessionId: (sid) => {},
+  getSessionId: () => {},
   hasBasket: () => {},
   getBasketItems: () => {},
   getTotalItems: () => {},
   getPeopleInGroup: () => {},
-  logConsumerHistory: (cState) => {},
+  updateJourney: (step) => {},
+  hasDisputeRaised: () => {},
+  updateDisputeReason: (reason) => {},
+  updateFeedback: (feedback) => {},
+  updateContactDetails: (phonenumber) => {},
   updateDummyBasket: () => {},
 });
 
 export function BasketContextProvider(props) {
-  const [consumerBasket, setConsumerBasket] = useState({});
+  const [consumerBasket, setBasket] = useState({});
+  const [consumerDispute, setDispute] = useState({});
+  const [consumerContactDetails, setContactDetails] = useState("");
+  const [consumerFeedback, setFeedback] = useState("");
 
+  // Session ID
+  function setSessionIdHandler(sid) {
+    consumerBasket.sid = sid;
+    return consumerBasket;
+  }
+
+  // Basket
   function updateConsumerBasketHandler(basket) {
-    setConsumerBasket((prevBasket) => {
+    setBasket((prevBasket) => {
       return (prevBasket = basket);
     });
   }
@@ -50,40 +79,92 @@ export function BasketContextProvider(props) {
   }
 
   function getBasketItemsHandler() {
-    return hasBasketHandler() ? consumerBasket.items : [];
+    return hasBasketHandler() ? consumerBasket.basket.items : [];
   }
 
   function getTotalItemsHandler() {
-    return hasBasketHandler() && consumerBasket.totalItems
-      ? consumerBasket.totalItems
-      : defaultTotalItems;
+    const totalItems = consumerBasket.basket.totalItems;
+    return hasBasketHandler() && totalItems ? totalItems : defaultTotalItems;
   }
 
   function getPeopleInGroupHandler() {
-    return hasBasketHandler() && consumerBasket.peopleInGroup
-      ? consumerBasket.peopleInGroup
+    const peopleInGroup = consumerBasket.basket.peopleInGroup;
+    return hasBasketHandler() && peopleInGroup
+      ? peopleInGroup
       : defaultPeopleInGroup;
   }
 
-  function updateConsumerStateHandler(cState) {
-    if (!consumerBasket.consumerState) consumerBasket.consumerState = [];
-    console.log("updateConsumerStateHandler");
-    console.log(cState);
-    console.log(consumerBasket.consumerState);
-    return consumerBasket.consumerState.push(cState);
+  // Consumer Checkout Journey
+  function updateJourneyHandler(step) {
+    if (!consumerBasket.updateJourney) consumerBasket.updateJourney = [];
+    console.log("updateJourneyHandler");
+    console.log(step);
+    console.log(consumerBasket.journeyHistory);
+    return consumerBasket.journeyHistory.push(step);
   }
 
+  // Dispute
+  function updateDisputeReasonHandler(reason) {
+    setDispute((prevDispute) => {
+      prevDispute = {
+        raised: true,
+        reason: reason,
+      };
+    });
+    return consumerDispute;
+  }
+
+  // Feedback
+  function updateConsumerFeedbackHandler(cFeedback) {
+    setFeedback((prevFeedback) => {
+      return (prevFeedback = cFeedback);
+    });
+    return consumerFeedback;
+  }
+
+  // Contact Details
+  function updateConsumerContactDetailsHandler(phonenumber) {
+    setContactDetails((prevDetails) => {
+      return (prevDetails = phonenumber);
+    });
+    return consumerContactDetails;
+  }
+
+  // Context
   const context = {
-    items: consumerBasket.items,
-    totalItems: consumerBasket.totalItems,
-    peopleInGroup: consumerBasket.peopleInGroup,
-    consumerState: consumerBasket.consumerState,
-    updateBasket: updateConsumerBasketHandler,
-    hasBasket: hasBasketHandler,
-    getBasketItems: getBasketItemsHandler,
-    getTotalItems: getTotalItemsHandler,
-    getPeopleInGroup: getPeopleInGroupHandler,
-    logConsumerHistory: updateConsumerStateHandler,
+    storeid: null,
+    sid: consumerBasket.sid,
+    basket: {
+      items: consumerBasket.items,
+      totalItems: consumerBasket.totalItems,
+      peopleInGroup: consumerBasket.peopleInGroup,
+    },
+    dispute: {
+      raised: consumerDispute.raised,
+      reason: consumerDispute.reason,
+    },
+    ContactDetails: {
+      email: "",
+      phonenumber: consumerContactDetails,
+    },
+    feedback: consumerFeedback,
+    journeyHistory: consumerBasket.updateJourney,
+    updateBasket: (basket) => updateConsumerBasketHandler,
+    setSessionId: (sid) => setSessionIdHandler,
+    getSessionId: () => {
+      return consumerBasket.sid;
+    },
+    hasBasket: () => hasBasketHandler,
+    getBasketItems: () => getBasketItemsHandler,
+    getTotalItems: () => getTotalItemsHandler,
+    getPeopleInGroup: () => getPeopleInGroupHandler,
+    updateJourney: (step) => updateJourneyHandler,
+    hasDisputeRaised: () => {
+      return consumerDispute.raised;
+    },
+    updateDisputeReason: (reason) => updateDisputeReasonHandler,
+    updateFeedback: (feedback) => updateConsumerFeedbackHandler,
+    updateContactDetails: (phonenumber) => updateConsumerContactDetailsHandler,
     updateDummyBasket: () => {
       updateConsumerBasketHandler(DUMMY_BASKET);
     },
