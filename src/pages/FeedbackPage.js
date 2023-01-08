@@ -21,7 +21,7 @@ const feedbackMapping = {
   Sad: { Icon: feedbackIcon4, Value: 4 },
   Cry: { Icon: feedbackIcon5, Value: 5 },
 }
-const navigationSubmitted = { navigateTo: "/" };
+const navigationSubmitted = { navigateTo: "/home" };
 
 // ====
 // Page
@@ -32,14 +32,16 @@ function FeedbackPage() {
   const basketCtx = useContext(BasketContext);
 
   console.log("FeedbackPage");
+  const jrSaveData = JRSaveConsumerData(basketCtx.sid);
 
   useEffect(() => {
     const submitFeedback = () => {
+      console.log("Submitted feedback");
+
       basketCtx.updateFeedback(feedbackValue);
-      JRSaveConsumerData.saveFeedback(feedbackValue).then((res) => {
-        console.log("submitted feedback");
-        navigate(navigationSubmitted.navigateTo);
-      });
+      jrSaveData.saveFeedback(feedbackValue);
+
+      navigate(navigationSubmitted.navigateTo);
     };
     feedbackValue && submitFeedback();
 
@@ -48,10 +50,6 @@ function FeedbackPage() {
   function feedbackHandler(event) {
     const val = event.target.getAttribute("val");
     console.log("consumer selected feedback: " + val);
-
-    basketCtx.updateJourney({ key: "FeedbackPage", value: val });
-    console.log(basketCtx);
-
     setFeedbackValue(val);
   }
 

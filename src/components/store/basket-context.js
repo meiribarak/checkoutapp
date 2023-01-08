@@ -1,35 +1,15 @@
 import React, { useState } from "react";
 
-const DUMMY_BASKET = {
-  items: [
-    {
-      img: "https://us.coca-cola.com/content/dam/nagbrands/us/coke/en/products/coca-cola-original/desktop/coca-cola-original-12oz.jpg?wid=325",
-      name: "Coke Can",
-      code: "123",
-      quantity: "2",
-    },
-    {
-      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF8TCne_TOJzZy3BVCiRQVKwWB3n15DjJa1g&usqp=CAU",
-      name: "Coke Bottle",
-      code: "222",
-      quantity: "1",
-    },
-  ],
-  totalItems: 3,
-  peopleInGroup: 1,
-};
-
 const defaultTotalItems = 1;
 const defaultPeopleInGroup = 1;
 
-const BasketContext = React.createContext({
-  storeid: null,
-  sid: null,
+const BasketContext = React.createContext({  
+  sid: null, 
   basket: {
     items: [],
     totalItems: defaultTotalItems,
     peopleInGroup: defaultPeopleInGroup,
-  },
+  },/*
   dispute: {
     raised: false,
     reason: "",
@@ -37,70 +17,49 @@ const BasketContext = React.createContext({
   ContactDetails: {
     email: "",
     phonenumber: "",
-  },
+  },*/
   feedback: "",
-  journeyHistory: [], // key value of page/button and what user selected, for tracking capabilities
-  updateBasket: (basket) => {},
-  setSessionId: (sid) => {},
-  getSessionId: () => {},
+  journeyHistory: [], // key value of page/button and what user selected, for tracking capabilities   
+  updateSessionId: (sid) => {},  
+  updateBasket: (basket) => {},  
   hasBasket: () => {},
-  getBasketItems: () => {},
-  getTotalItems: () => {},
-  getPeopleInGroup: () => {},
-  updateJourney: (step) => {},
+  updateJourney: (step) => {},/*
   hasDisputeRaised: () => {},
   updateDisputeReason: (reason) => {},
   updateFeedback: (feedback) => {},
-  updateContactDetails: (phonenumber) => {},
-  updateDummyBasket: () => {},
+  updateContactDetails: (phonenumber) => {},*/  
 });
 
-export function BasketContextProvider(props) {
+export function BasketContextProvider(props) {  
+  const [consumerSessionId, setSessionId] = useState("");
   const [consumerBasket, setBasket] = useState({});
+  const [consumerJourney, setJourney] = useState([]);
   const [consumerDispute, setDispute] = useState({});
   const [consumerContactDetails, setContactDetails] = useState("");
   const [consumerFeedback, setFeedback] = useState("");
-
+  
   // Session ID
-  function setSessionIdHandler(sid) {
-    consumerBasket.sid = sid;
-    return consumerBasket;
-  }
+  const updateSessionIdHandler = (sid) => {
+    setSessionId(sid);    
+  }  
 
   // Basket
-  function updateConsumerBasketHandler(basket) {
+  const updateConsumerBasketHandler = (basket) => {
+    console.log("update basket: ", basket);
     setBasket((prevBasket) => {
       return (prevBasket = basket);
     });
   }
 
-  function hasBasketHandler() {
-    return consumerBasket && consumerBasket.items;
-  }
-
-  function getBasketItemsHandler() {
-    return hasBasketHandler() ? consumerBasket.basket.items : [];
-  }
-
-  function getTotalItemsHandler() {
-    const totalItems = consumerBasket.basket.totalItems;
-    return hasBasketHandler() && totalItems ? totalItems : defaultTotalItems;
-  }
-
-  function getPeopleInGroupHandler() {
-    const peopleInGroup = consumerBasket.basket.peopleInGroup;
-    return hasBasketHandler() && peopleInGroup
-      ? peopleInGroup
-      : defaultPeopleInGroup;
-  }
+  const hasConsumerBasketHandler = () => {
+    return !!consumerBasket && !!consumerBasket.items;
+  }  
 
   // Consumer Checkout Journey
   function updateJourneyHandler(step) {
-    if (!consumerBasket.updateJourney) consumerBasket.updateJourney = [];
-    console.log("updateJourneyHandler");
-    console.log(step);
-    console.log(consumerBasket.journeyHistory);
-    return consumerBasket.journeyHistory.push(step);
+    if (!consumerJourney) setJourney([]);
+    console.log("Update Consumer Journey: ", consumerJourney);
+    consumerJourney.push(step);
   }
 
   // Dispute
@@ -116,10 +75,7 @@ export function BasketContextProvider(props) {
 
   // Feedback
   function updateConsumerFeedbackHandler(cFeedback) {
-    setFeedback((prevFeedback) => {
-      return (prevFeedback = cFeedback);
-    });
-    return consumerFeedback;
+    setFeedback(cFeedback);
   }
 
   // Contact Details
@@ -131,14 +87,14 @@ export function BasketContextProvider(props) {
   }
 
   // Context
-  const context = {
-    storeid: null,
-    sid: consumerBasket.sid,
+  const context = {    
+    sid: consumerSessionId,    
     basket: {
       items: consumerBasket.items,
       totalItems: consumerBasket.totalItems,
       peopleInGroup: consumerBasket.peopleInGroup,
     },
+    /*
     dispute: {
       raised: consumerDispute.raised,
       reason: consumerDispute.reason,
@@ -146,28 +102,24 @@ export function BasketContextProvider(props) {
     ContactDetails: {
       email: "",
       phonenumber: consumerContactDetails,
-    },
+    },*/
     feedback: consumerFeedback,
-    journeyHistory: consumerBasket.updateJourney,
-    updateBasket: (basket) => updateConsumerBasketHandler,
-    setSessionId: (sid) => setSessionIdHandler,
-    getSessionId: () => {
-      return consumerBasket.sid;
-    },
-    hasBasket: () => hasBasketHandler,
-    getBasketItems: () => getBasketItemsHandler,
-    getTotalItems: () => getTotalItemsHandler,
-    getPeopleInGroup: () => getPeopleInGroupHandler,
-    updateJourney: (step) => updateJourneyHandler,
-    hasDisputeRaised: () => {
+    journeyHistory: consumerJourney,     
+    
+    // Session Handlers
+    updateSessionId: updateSessionIdHandler,
+    
+    // Basket handlers    
+    updateBasket: updateConsumerBasketHandler,
+    hasBasket: hasConsumerBasketHandler,
+    updateJourney: updateJourneyHandler,
+    updateFeedback: updateConsumerFeedbackHandler,
+    /* hasDisputeRaised: () => {
       return consumerDispute.raised;
     },
     updateDisputeReason: (reason) => updateDisputeReasonHandler,
-    updateFeedback: (feedback) => updateConsumerFeedbackHandler,
-    updateContactDetails: (phonenumber) => updateConsumerContactDetailsHandler,
-    updateDummyBasket: () => {
-      updateConsumerBasketHandler(DUMMY_BASKET);
-    },
+    
+    updateContactDetails: (phonenumber) => updateConsumerContactDetailsHandler,*/    
   };
 
   return (

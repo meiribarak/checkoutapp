@@ -19,78 +19,88 @@ const jrSaveDataBodyTemplate = {
   code: "",
 };
 
-const jrSaveFeedbackHandler = (feedbackCode) => {
-  jrSaveDataBodyTemplate.code = feedbackCode;
-  return JRFetchData(jrFetchDataUrl.saveFeedback, jrSaveDataBodyTemplate);
-};
-
-const jrSaveReasonNotPurchasingHandler = (noPurchaseCode) => {
-  jrSaveDataBodyTemplate.code = noPurchaseCode;
-  return JRFetchData(
-    jrFetchDataUrl.saveReasonNotPurchasing,
-    jrSaveDataBodyTemplate
-  );
-};
-
-const jrSaveDisputeHandler = (issueCode) => {
-  jrSaveDataBodyTemplate.code = issueCode;
-  return JRFetchData(jrFetchDataUrl.saveDispute, jrSaveDataBodyTemplate);
-};
-
-const jrSaveReceiptRequestHandler = (phoneNumber) => {
-  return JRFetchData(jrFetchDataUrl.saveReceiptRequest, {
-    storeId: "",
-    sessionId: "",
-    phone: phoneNumber,
-  });
-};
-
-const JRSaveConsumerData = {
-  saveFeedback: jrSaveFeedbackHandler,
-  saveReasonNotPurchasing: jrSaveReasonNotPurchasingHandler,
-  saveDispute: jrSaveDisputeHandler,
-  saveReceiptRequest: jrSaveReceiptRequestHandler,
-};
-
-
-const JRFetchData = (reqUrl, reqBody) => {
+const JRSaveConsumerData = (sessionId) => {
   const authCtx = useContext(AuthContext);
-  const basketCtx = useContext(BasketContext);
-  const url = environmentUrl.concat(reqUrl);
+  //const basketCtx = useContext(BasketContext);
+  
+  const jrFetchData = (reqUrl, reqBody) => {
+    
+    const url = environmentUrl.concat(reqUrl);
 
-  reqBody.storeId = basketCtx.storeid;
-  reqBody.sessionId = basketCtx.sid;
+    //reqBody.storeId = authCtx.storeid;
+    //reqBody.sessionId = basketCtx.sid;
 
-  let res = null;
-  fetch(url, {
-    method: "POST",
-    body: JSON.stringify(reqBody),
-    headers: {
-      "x-api-key": apiKey,
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => {
-      console.log("Fetch data from: " + reqUrl);
-      console.log(res);
-      console.log(res.ok);
+    reqBody.storeId = authCtx.storeId;
+    reqBody.sessionId = sessionId;
 
-      if (res.ok) {
-        return res.json();
-      } else {
-        return res.json().then((data) => {
-          let errorMessage = "Authentication Failed";
-          if (data && data.error && data.error.message) {
-            errorMessage = data.error.message;
-          }
-          throw new Error(errorMessage);
-        });
-      }
+    console.log("JRFetchData: ", reqUrl, reqBody);
+    return null; // TO CHANGE!!!
+
+    let res = null;
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(reqBody),
+      headers: {
+        "x-api-key": apiKey,
+        "Content-Type": "application/json",
+      },
     })
-    .catch((err) => {
-      alert(err.message);
-      return res.json();
+      .then((res) => {
+        console.log("Fetch data from: " + reqUrl);
+        console.log(res);
+        console.log(res.ok);
+
+        if (res.ok) {
+          return res.json();
+        } else {
+          return res.json().then((data) => {
+            let errorMessage = "Authentication Failed";
+            if (data && data.error && data.error.message) {
+              errorMessage = data.error.message;
+            }
+            throw new Error(errorMessage);
+          });
+        }
+      })
+      .catch((err) => {
+        alert(err.message);
+        return res.json();
+      });
+  };
+
+  const jrSaveFeedbackHandler = (feedbackCode) => {
+    console.log("jrSaveFeedbackHandler", feedbackCode);
+    jrSaveDataBodyTemplate.code = feedbackCode;
+    return jrFetchData(jrFetchDataUrl.saveFeedback, jrSaveDataBodyTemplate);
+  };
+
+  const jrSaveReasonNotPurchasingHandler = (noPurchaseCode) => {
+    jrSaveDataBodyTemplate.code = noPurchaseCode;
+    return jrFetchData(
+      jrFetchDataUrl.saveReasonNotPurchasing,
+      jrSaveDataBodyTemplate
+    );
+  };
+
+  const jrSaveDisputeHandler = (issueCode) => {
+    jrSaveDataBodyTemplate.code = issueCode;
+    return jrFetchData(jrFetchDataUrl.saveDispute, jrSaveDataBodyTemplate);
+  };
+
+  const jrSaveReceiptRequestHandler = (phoneNumber) => {
+    return jrFetchData(jrFetchDataUrl.saveReceiptRequest, {
+      storeId: "",
+      sessionId: "",
+      phone: phoneNumber,
     });
+  };
+
+  return {
+    saveFeedback: jrSaveFeedbackHandler,
+    saveReasonNotPurchasing: jrSaveReasonNotPurchasingHandler,
+    saveDispute: jrSaveDisputeHandler,
+    saveReceiptRequest: jrSaveReceiptRequestHandler,
+  };
 };
 
 export default JRSaveConsumerData;

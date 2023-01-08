@@ -7,6 +7,26 @@ import BasketContext from "../components/store/basket-context";
 
 const juxtalogo = "https://www.juxta.ai/build/img/logo.svg";
 
+const DUMMY_BASKET = {
+  items: [
+    {
+      img: "https://us.coca-cola.com/content/dam/nagbrands/us/coke/en/products/coca-cola-original/desktop/coca-cola-original-12oz.jpg?wid=325",
+      name: "Coke Can",
+      code: "123",
+      quantity: "2",
+    },
+    {
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF8TCne_TOJzZy3BVCiRQVKwWB3n15DjJa1g&usqp=CAU",
+      name: "Coke Bottle",
+      code: "222",
+      quantity: "1",
+    },
+  ],
+  totalItems: 3,
+  peopleInGroup: 1,
+};
+
+
 const TestPage = () => {
   const navigate = useNavigate();
   const [isTestingDataInjected, setTestingDate] = useState(false);
@@ -23,29 +43,23 @@ const TestPage = () => {
   
   useEffect(() => {
 
-    const currentTime = new Date(new Date().getTime() + 12).getTime();
-    
     if (isTestingDataInjected) {
-      //authCtx.logout();
+      const currentTime = new Date(new Date().getTime() + 12).getTime();
 
-      //console.log("load test data");
-      //authCtx.login(tempToken, currentTime, tempToken); // (token, expirationTime, refreshToken)
-      //console.log(authCtx);
+      authCtx.logout();
 
-      //basketCtx.updateDummyBasket();
-      //console.log(basketCtx);
+      const tempToken = tokenInputRef.current.value;
+      authCtx.login(tempToken, currentTime, tempToken, storeIdInputRef.current.value); // (token, expirationTime, refreshToken, storeId)
 
-      //navigate("/basket");
+      basketCtx.updateSessionId(sessionIdInputRef.current.value);
+      basketCtx.updateBasket(DUMMY_BASKET);
+
+      
+      navigate("/basket");
     }
-  }, [
-    basketCtx,
-    authCtx,
-    isTestingDataInjected,
-    navigate
-  ]);
+  }, [ isTestingDataInjected, authCtx, basketCtx, navigate ]);
 
   function startTestingHandler() {
-    console.log("click");
     setTestingDate(true);
   }
 

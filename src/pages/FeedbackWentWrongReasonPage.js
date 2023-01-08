@@ -29,13 +29,17 @@ const FeedbackWentWrongReasonPage = () => {
   
   console.log("FeedbackWentWrongReasonPage");
 
+  const jrSaveData = JRSaveConsumerData(basketCtx.sid);
+
   useEffect(() => {
     const submitFeedback = () => {
+      
+      console.log("submit something went wrong reason");
+
       basketCtx.updateDisputeReason(feedbackValue);
-      JRSaveConsumerData.saveDispute(feedbackValue).then(() => {
-        console.log("submitted feedback");
-        navigate(navigationNext.navigateTo);
-      });
+      jrSaveData.saveDispute(feedbackValue);
+              
+      navigate(navigationNext.navigateTo);
     };
     feedbackValue && submitFeedback();
 
@@ -48,7 +52,6 @@ const FeedbackWentWrongReasonPage = () => {
       console.log("consumer selected reason: " + val);
 
       basketCtx.updateJourney({ key: "FeedbackWentWrongReasonPage", value: val });
-      console.log(basketCtx);
 
       setFeedbackValue(val);
     }    
