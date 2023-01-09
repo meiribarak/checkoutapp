@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./../components/ui/css/styles.css";
 import CustomerHeader from "../components/ui/CustomerHeader";
 import BasketContext from "../components/store/basket-context";
@@ -20,41 +20,51 @@ const actionTrustYou = { response: "TrustYou", navigateTo: "/thankyou" };
 function PhoneNumberPage() {
   const basketCtx = useContext(BasketContext);
   const navigate = useNavigate();
-  const {ShowTrustYou} = useLocation();
-  const [phoneNumber, setPhoneNumber] = useState(null);
+
+  const { ShowTrustYou } = useLocation();
   const isShowTrustMeButton = ShowTrustYou;
 
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [consumerSelection, setConsumerSelection] = useState({});
+
   console.log("PhoneNumberPage");
+  const jrSaveData = JRSaveConsumerData(basketCtx.sid);
+
+  const isValidPhoneNumber = () => { 
+    return true;  // add relevant code
+  }
+
+  const isSelected = (action) => {
+    return action.response === consumerSelection.response;
+  };
+
+  useEffect(() => {
+    const savePhoneNumber = () => {
+      console.log("Save PhoneNumber");
+
+      basketCtx.updateContactDetails(phoneNumber);
+      jrSaveData.saveReceiptRequest(phoneNumber);
+    };
+
+    isSelected(actionConfirm) && isValidPhoneNumber() && savePhoneNumber();
+
+    if (consumerSelection.response) {
+      console.log("navigate to " + consumerSelection.navigateTo);
+      navigate(consumerSelection.navigateTo);
+    }
+  }, [phoneNumber, consumerSelection]);
 
   function actionHandler(action) {
-    // useEffect(() => {
-    //   const submitPhoneNumber = () => {
-    //     basketCtx.updateContactDetails(phoneNumber);
-    //     JRSaveConsumerData.saveReceiptRequest(phoneNumber);
-    //   };
-    //   phoneNumber && submitPhoneNumber();
-    // }, [phoneNumber, res.response === uiResponses.Confirm]);
-
-    if (action.response === actionConfirm.response) {
-      basketCtx.updateContactDetails(phoneNumber);
-      JRSaveConsumerData.saveReceiptRequest(phoneNumber);
-    }
-
     basketCtx.updateJourney({ key: "PhoneNumberPage", value: action.response });
-    console.log("navigate to " + action.navigateTo);
-    navigate(action.navigateTo);
+    setConsumerSelection(action);
   }
 
   function addDigitToPhoneNumber(event) {
-    setPhoneNumber((prevPhoneNumber) => {
-      return prevPhoneNumber.concat(event.target.innerHTML);
-    });
+    setPhoneNumber(phoneNumber.concat(event.target.innerHTML));
   }
 
   function removeDigitToPhoneNumber() {
-    setPhoneNumber((prevPhoneNumber) => {
-      return prevPhoneNumber.slice(0, -1);
-    });
+    setPhoneNumber(phoneNumber.slice(0, -1));
   }
 
   return (

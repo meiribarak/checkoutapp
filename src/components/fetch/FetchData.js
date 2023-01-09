@@ -2,7 +2,8 @@ import React, { useContext } from "react";
 import AuthContext from "../store/auth-context";
 import BasketContext from "../store/basket-context";
 
-const environmentUrl = "https://api.sandbox.juxtaretail.com/";
+const devEnvironmentUrl = "https://api.dev.juxtaretail.com/";
+const sandboxEnvironmentUrl = "https://api.sandbox.juxtaretail.com/";
 const apiKey = "UycIBPWoRq8DkLx2euxgv4LmsueVpkSB88K9zu2W";
 
 const jrFetchDataUrl = {
@@ -21,27 +22,24 @@ const jrSaveDataBodyTemplate = {
 
 const JRSaveConsumerData = (sessionId) => {
   const authCtx = useContext(AuthContext);
-  //const basketCtx = useContext(BasketContext);
+  const environmentUrl = devEnvironmentUrl;
   
   const jrFetchData = (reqUrl, reqBody) => {
     
     const url = environmentUrl.concat(reqUrl);
 
-    //reqBody.storeId = authCtx.storeid;
-    //reqBody.sessionId = basketCtx.sid;
-
     reqBody.storeId = authCtx.storeId;
     reqBody.sessionId = sessionId;
 
     console.log("JRFetchData: ", reqUrl, reqBody);
-    return null; // TO CHANGE!!!
+    //return null; // TO CHANGE!!!
 
     let res = null;
     fetch(url, {
       method: "POST",
       body: JSON.stringify(reqBody),
       headers: {
-        "x-api-key": apiKey,
+        Authorization: "Bearer " + authCtx.token,
         "Content-Type": "application/json",
       },
     })

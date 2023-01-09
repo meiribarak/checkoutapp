@@ -13,11 +13,11 @@ const BasketContext = React.createContext({
   dispute: {
     raised: false,
     reason: "",
-  },
+  },*/
   ContactDetails: {
     email: "",
     phonenumber: "",
-  },*/
+  },
   feedback: "",
   journeyHistory: [], // key value of page/button and what user selected, for tracking capabilities   
   updateSessionId: (sid) => {},  
@@ -80,10 +80,7 @@ export function BasketContextProvider(props) {
 
   // Contact Details
   function updateConsumerContactDetailsHandler(phonenumber) {
-    setContactDetails((prevDetails) => {
-      return (prevDetails = phonenumber);
-    });
-    return consumerContactDetails;
+    setContactDetails(phonenumber);    
   }
 
   // Context
@@ -98,11 +95,11 @@ export function BasketContextProvider(props) {
     dispute: {
       raised: consumerDispute.raised,
       reason: consumerDispute.reason,
-    },
+    },*/
     ContactDetails: {
       email: "",
       phonenumber: consumerContactDetails,
-    },*/
+    },
     feedback: consumerFeedback,
     journeyHistory: consumerJourney,     
     
@@ -113,13 +110,16 @@ export function BasketContextProvider(props) {
     updateBasket: updateConsumerBasketHandler,
     hasBasket: hasConsumerBasketHandler,
     updateJourney: updateJourneyHandler,
+
+    // Feedback
     updateFeedback: updateConsumerFeedbackHandler,
     /* hasDisputeRaised: () => {
       return consumerDispute.raised;
     },
-    updateDisputeReason: (reason) => updateDisputeReasonHandler,
+    updateDisputeReason: (reason) => updateDisputeReasonHandler,*/
     
-    updateContactDetails: (phonenumber) => updateConsumerContactDetailsHandler,*/    
+    // Contact Details
+    updateContactDetails: updateConsumerContactDetailsHandler,    
   };
 
   return (
