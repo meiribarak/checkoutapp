@@ -46,14 +46,17 @@ const FeedbackWentWrongReasonPage = () => {
   }, [feedbackValue]);
 
   function feedbackHandler(val) {
+    
     if (!val) {
       navigate(navigationBack.navigateTo);
     } else {
-      console.log("consumer selected reason: " + val);
+      const selectedReason = val.Value;
 
-      basketCtx.updateJourney({ key: "FeedbackWentWrongReasonPage", value: val });
+      console.log("consumer selected reason: " + selectedReason);
 
-      setFeedbackValue(val);
+      basketCtx.updateJourney({ key: "FeedbackWentWrongReasonPage", value: selectedReason });
+
+      setFeedbackValue(selectedReason);
     }    
   }
   

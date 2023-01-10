@@ -32,25 +32,29 @@ const FeedbackCartEmptyReasonPage = () => {
 
   useEffect(() => {
     const submitFeedback = () => {
-      console.log("submit Empty cart reason");
-      basketCtx.updateDisputeReason(feedbackValue);
-      jrSaveData.saveDispute(feedbackValue);
+      console.log("Submitted no purhcase feedback");
+
+      basketCtx.updateNoPurchaseFeedback(feedbackValue);
+      jrSaveData.saveReasonNotPurchasing(feedbackValue);
+
       navigate(navigationNext.navigateTo);
     };
     feedbackValue && submitFeedback();
+
   }, [feedbackValue]);
 
   function feedbackHandler(val) {
     if (!val) {
       navigate(navigationBack.navigateTo);
     } else {
-      
-      console.log("consumer selected reason: " + val);
+      const selectedReason = val.Value;
 
-      basketCtx.updateJourney({ key: "FeedbackCartEmptyReasonPage", value: val});
+      console.log("consumer selected reason: " + selectedReason);
 
-      setFeedbackValue(val);
-    }
+      basketCtx.updateJourney({ key: "FeedbackCartEmptyReasonPage", value: selectedReason });
+
+      setFeedbackValue(selectedReason);
+    }    
   }
 
   return (

@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import AuthContext from "../store/auth-context";
 import BasketContext from "../store/basket-context";
 
-const devEnvironmentUrl = "https://api.dev.juxtaretail.com/";
-const sandboxEnvironmentUrl = "https://api.sandbox.juxtaretail.com/";
+const devEnvironmentUrl = "https://api.dev.juxtaretail.com";
+const sandboxEnvironmentUrl = "https://api.sandbox.juxtaretail.com";
 const apiKey = "UycIBPWoRq8DkLx2euxgv4LmsueVpkSB88K9zu2W";
 
 const jrFetchDataUrl = {
@@ -23,7 +23,7 @@ const jrSaveDataBodyTemplate = {
 const JRSaveConsumerData = (sessionId) => {
   const authCtx = useContext(AuthContext);
   const environmentUrl = devEnvironmentUrl;
-  
+
   const jrFetchData = (reqUrl, reqBody) => {
     
     const url = environmentUrl.concat(reqUrl);
@@ -32,7 +32,6 @@ const JRSaveConsumerData = (sessionId) => {
     reqBody.sessionId = sessionId;
 
     console.log("JRFetchData: ", reqUrl, reqBody);
-    //return null; // TO CHANGE!!!
 
     let res = null;
     fetch(url, {
@@ -44,9 +43,8 @@ const JRSaveConsumerData = (sessionId) => {
       },
     })
       .then((res) => {
-        console.log("Fetch data from: " + reqUrl);
-        console.log(res);
-        console.log(res.ok);
+        console.log("Fetch data from: ", reqUrl);
+        console.log("res", res);        
 
         if (res.ok) {
           return res.json();

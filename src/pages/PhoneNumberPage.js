@@ -34,11 +34,11 @@ function PhoneNumberPage() {
     return true;  // add relevant code
   }
 
-  const isSelected = (action) => {
-    return action.response === consumerSelection.response;
-  };
-
   useEffect(() => {
+    const isSelected = (action) => {
+      return action.response === consumerSelection.response;
+    };
+
     const savePhoneNumber = () => {
       console.log("Save PhoneNumber");
 
